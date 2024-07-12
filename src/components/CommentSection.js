@@ -38,7 +38,7 @@ function CommentSection({ postId }) {
 
   const getCommentContent = (comment) => {
     // Check various possible properties for the comment content
-    if (comment.interactions.comments) return comment.content;
+    if (comment.content) return comment.content;
     if (comment.text) return comment.text;
     if (comment.body) return comment.body;
     if (comment.message) return comment.message;
