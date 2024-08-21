@@ -12,7 +12,6 @@ function CommentSection({ postId }) {
       try {
         setIsLoading(true);
         const response = await axios.get(`http://localhost:5000/api/posts/${postId}/comments`);
-        console.log('Fetched comments:', response.data); // Log the fetched data
         setComments(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -30,19 +29,12 @@ function CommentSection({ postId }) {
       const response = await axios.post(`http://localhost:5000/api/posts/${postId}/comments`, { content: newComment });
       setComments([...comments, response.data]);
       setNewComment('');
+      alert('Comment posted successfully');
     } catch (error) {
       console.error('Error posting comment:', error);
       setError('Failed to post comment');
+      alert("We can't post the comment");
     }
-  };
-
-  const getCommentContent = (comment) => {
-    // Check various possible properties for the comment content
-    if (comment.content) return comment.content;
-    if (comment.text) return comment.text;
-    if (comment.body) return comment.body;
-    if (comment.message) return comment.message;
-    return 'No content';
   };
 
   return (
@@ -56,8 +48,9 @@ function CommentSection({ postId }) {
         <ul className="space-y-2 mb-4">
           {Array.isArray(comments) && comments.length > 0 ? (
             comments.map((comment, index) => (
-              <li key={comment._id || index} className="bg-white p-2 rounded shadow">
-                {getCommentContent(comment)}
+              <li key={index} className="bg-white p-2 rounded shadow">
+                {comment.content}
+                <p className="text-gray-500 text-sm">Posted on {new Date(comment.createdAt).toLocaleString()}</p>
               </li>
             ))
           ) : (
@@ -73,7 +66,9 @@ function CommentSection({ postId }) {
           placeholder="Add a comment..."
           className="flex-grow p-2 border rounded-l"
         />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-r">Post</button>
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-r">
+          Post
+        </button>
       </form>
     </div>
   );
